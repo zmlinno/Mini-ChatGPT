@@ -1,0 +1,112 @@
+<user> 你好
+<assistant> 你好，我是一个迷你聊天模型。
+<end>
+
+<user> 你是谁？
+<assistant> 我是 MiniChatGPT，一个用于学习大模型原理的小型聊天模型。
+<end>
+
+<user> 你能做什么？
+<assistant> 我可以根据训练数据生成简单的回答，帮助你理解 GPT 的训练过程。
+<end>
+
+<user> 什么是大模型？
+<assistant> 大模型是参数数量很多、通过大量数据训练出来的神经网络模型。
+<end>
+
+<user> 什么是 GPT？
+<assistant> GPT 是一种基于 Transformer 的生成式语言模型，核心任务是预测下一个 token。
+<end>
+
+<user> 什么是 token？
+<assistant> token 是模型处理文本时的基本单位，可以是字、词或者子词。
+<end>
+
+<user> 什么是 embedding？
+<assistant> embedding 是把 token 转换成向量的过程，让模型可以用数字表示文本。
+<end>
+
+<user> 什么是 self-attention？
+<assistant> self-attention 是让每个 token 关注上下文中其他 token 的机制。
+<end>
+
+<user> 什么是 Transformer？
+<assistant> Transformer 是一种神经网络结构，主要由 attention、前馈网络、残差连接和归一化组成。
+<end>
+
+<user> GPT 是怎么训练的？
+<assistant> GPT 通过阅读大量文本，学习根据前面的 token 预测下一个 token。
+<end>
+
+<user> 1+1等于几？
+<assistant> 1+1等于2。
+<end>
+
+<user> 2+3等于几？
+<assistant> 2+3等于5。
+<end>
+
+<user> 中国的首都是哪里？
+<assistant> 中国的首都是北京。
+<end>
+
+<user> 韩国的首都是哪里？
+<assistant> 韩国的首都是首尔。
+<end>
+
+<user> 日本的首都是哪里？
+<assistant> 日本的首都是东京。
+<end>
+
+<user> C++ 是什么？
+<assistant> C++ 是一种高性能编程语言，常用于系统开发、嵌入式、游戏和机器人开发。
+<end>
+
+<user> Python 是什么？
+<assistant> Python 是一种语法简单、生态丰富的编程语言，常用于人工智能、数据分析和后端开发。
+<end>
+
+<user> Linux 是什么？
+<assistant> Linux 是一种开源操作系统，常用于服务器、嵌入式设备和机器人开发。
+<end>
+
+<user> 什么是 ROS2？
+<assistant> ROS2 是机器人操作系统的第二代版本，常用于机器人通信、控制和导航。
+<end>
+
+<user> 什么是 PID？
+<assistant> PID 是一种经典控制算法，由比例、积分、微分三部分组成。
+<end>
+
+<user> 什么是嵌入式开发？
+<assistant> 嵌入式开发是针对特定硬件设备进行软件开发，例如单片机、车载设备和机器人控制器。
+<end>
+
+<user> 什么是机器人开发？
+<assistant> 机器人开发通常包括感知、控制、导航、通信和任务规划等内容。
+<end>
+
+<user> 什么是 AI Agent？
+<assistant> AI Agent 是能够理解任务、调用工具并完成目标的智能程序。
+<end>
+
+<user> 学习大模型需要什么基础？
+<assistant> 学习大模型需要 Python、PyTorch、线性代数、神经网络、Transformer 和训练流程等基础。
+<end>
+
+<user> 训练模型需要什么？
+<assistant> 训练模型需要数据、模型结构、损失函数、优化器和计算资源。
+<end>
+
+<user> 为什么小模型回答不好？
+<assistant> 因为小模型参数少、数据少，能记住和理解的模式有限。
+<end>
+
+<user> MiniChatGPT 的目的是什么？
+<assistant> MiniChatGPT 的目的不是做出真正的 ChatGPT，而是帮助我们理解大模型的底层原理。
+<end>
+
+
+<user> 韩国的首都是哪里？
+<assistant> 韩国的首都是首尔。
+<end>
