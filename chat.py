@@ -1,29 +1,79 @@
 # chat.py
 
+# chat.py
+
 import torch
 from torch.nn import functional as F
 
 from config import device, block_size
-from data_loader import tokenizer
+from tokenizer import CharTokenizer
 from model import GPTLanguageModel
 
 
-def generate_reply(model, prompt, max_new_tokens=100, temperature=0.8):
+def top_k_top_p_filtering(logits, top_k=20, top_p=0.9):
+    """
+    对 logits 做 top-k 和 top-p 过滤。
+
+    logits shape: [B, vocab_size]
+    """
+
+    # 1. top-k：只保留概率最高的 k 个 token
+    if top_k is not None and top_k > 0:
+        top_k = min(top_k, logits.size(-1))
+
+        values, _ = torch.topk(logits, top_k)
+
+        # 第 k 大的分数
+        min_values = values[:, -1].unsqueeze(-1)
+
+        # 比第 k 大还小的分数全部设为 -inf
+        logits = logits.masked_fill(logits < min_values, float("-inf"))
+
+    # 2. top-p：只保留累计概率达到 top_p 的 token
+    if top_p is not None and 0 < top_p < 1.0:
+        sorted_logits, sorted_indices = torch.sort(
+            logits,
+            descending=True,
+            dim=-1
+        )
+
+        sorted_probs = F.softmax(sorted_logits, dim=-1)
+        cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
+
+        # 找到累计概率超过 top_p 的位置
+        sorted_indices_to_remove = cumulative_probs > top_p
+
+        # 右移一位，保证第一个超过 top_p 的 token 也被保留
+        sorted_indices_to_remove[..., 1:] = sorted_indices_to_remove[..., :-1].clone()
+        sorted_indices_to_remove[..., 0] = False
+
+        # 把排序后的 mask 映射回原始 vocab 顺序
+        indices_to_remove = torch.zeros_like(logits, dtype=torch.bool)
+        indices_to_remove.scatter_(
+            dim=-1,
+            index=sorted_indices,
+            src=sorted_indices_to_remove
+        )
+
+        logits = logits.masked_fill(indices_to_remove, float("-inf"))
+
+    return logits
+
+
+def generate_reply(
+    model,
+    tokenizer,
+    prompt,
+    max_new_tokens=120,
+    temperature=0.7,
+    top_k=20,
+    top_p=0.9
+):
     """
     根据用户输入生成回答。
-
-    prompt: 拼接好的提示词，例如：
-        <user> 你好
-        <assistant>
-
-    max_new_tokens: 最多生成多少个新 token
-    temperature: 温度，越低越稳定，越高越随机
     """
 
-    # 1. 编码输入文本
     input_ids = tokenizer.encode(prompt)
-
-    # 2. 转成 tensor，形状是 [1, T]
     idx = torch.tensor([input_ids], dtype=torch.long, device=device)
 
     model.eval()
@@ -37,10 +87,17 @@ def generate_reply(model, prompt, max_new_tokens=100, temperature=0.8):
             logits, _ = model(idx_cond)
 
             # 只取最后一个位置的输出
-            logits = logits[:, -1, :]
+            logits = logits[:, -1, :]  # [B, vocab_size]
 
             # temperature 控制随机程度
             logits = logits / temperature
+
+            # top-k / top-p 过滤
+            logits = top_k_top_p_filtering(
+                logits,
+                top_k=top_k,
+                top_p=top_p
+            )
 
             # 转成概率
             probs = F.softmax(logits, dim=-1)
@@ -51,21 +108,21 @@ def generate_reply(model, prompt, max_new_tokens=100, temperature=0.8):
             # 拼接新 token
             idx = torch.cat((idx, idx_next), dim=1)
 
-            # 如果生成到了 <end>，就可以提前停止
+            # 如果生成到了 <end>，提前停止
             generated_text = tokenizer.decode(idx[0].tolist())
+
             if "<end>" in generated_text[len(prompt):]:
                 break
 
-    # 3. 解码完整文本
     full_text = tokenizer.decode(idx[0].tolist())
 
-    # 4. 只截取 assistant 的回答部分
+    # 只保留 assistant 的回答部分
     if "<assistant>" in full_text:
         answer = full_text.split("<assistant>")[-1]
     else:
         answer = full_text
 
-    # 5. 如果生成了 <end>，就截断
+    # 遇到 <end> 截断
     if "<end>" in answer:
         answer = answer.split("<end>")[0]
 
@@ -75,11 +132,14 @@ def generate_reply(model, prompt, max_new_tokens=100, temperature=0.8):
 def main():
     print("正在加载 MiniChatGPT...")
 
-    # 1. 创建模型结构
+    # 1. 加载 tokenizer
+    tokenizer = CharTokenizer.load("vocab.json")
+
+    # 2. 创建模型
     model = GPTLanguageModel(tokenizer.vocab_size)
     model = model.to(device)
 
-    # 2. 加载训练好的参数
+    # 3. 加载训练好的参数
     model.load_state_dict(torch.load("mini_gpt.pth", map_location=device))
     model.eval()
 
@@ -97,21 +157,19 @@ def main():
         if user_input == "":
             continue
 
-        # 注意：当前 tokenizer 只能识别训练数据中出现过的字符
-        try:
-            prompt = f"<user> {user_input}\n<assistant> "
-            reply = generate_reply(
-                model,
-                prompt,
-                max_new_tokens=120,
-                temperature=0.8
-            )
-            print("MiniChatGPT：", reply)
+        prompt = f"<user> {user_input}\n<assistant> "
 
-        except KeyError as e:
-            print("MiniChatGPT：你输入的字符不在训练数据词表里。")
-            print("建议把相关问答加入 data/chat.txt，然后重新训练模型。")
-            print("无法识别的字符：", e)
+        reply = generate_reply(
+            model,
+            tokenizer,
+            prompt,
+            max_new_tokens=120,
+            temperature=0.7,
+            top_k=20,
+            top_p=0.9
+        )
+
+        print("MiniChatGPT：", reply)
 
 
 if __name__ == "__main__":

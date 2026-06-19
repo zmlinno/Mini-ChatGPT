@@ -1,51 +1,94 @@
+# tokenizer.py
+
+import json
+
+UNK_TOKEN = "�"
+
+
 class CharTokenizer:
-    def __init__(self, text):
+    def __init__(self, text=None, chars=None):
         """
-        text: 训练数据的完整文本
+        两种创建方式：
+
+        1. 训练时：
+           CharTokenizer(text=训练文本)
+
+        2. 推理时：
+           CharTokenizer(chars=保存好的词表)
         """
 
-        # 1. 找出训练文本中出现过的所有字符
-        chars = sorted(list(set(text)))
+        if chars is None:
+            if text is None:
+                raise ValueError("必须提供 text 或 chars")
 
-        # 2. 建立字符 -> 数字id 的映射
+            chars = sorted(list(set(text)))
+
+            # 避免重复加入 UNK
+            if UNK_TOKEN in chars:
+                chars.remove(UNK_TOKEN)
+
+            # 第 0 个 token 留给未知字符
+            chars = [UNK_TOKEN] + chars
+
+        self.chars = chars
         self.stoi = {ch: i for i, ch in enumerate(chars)}
-
-        # 3. 建立数字id -> 字符 的映射
         self.itos = {i: ch for i, ch in enumerate(chars)}
-
-        # 4. 词表大小
         self.vocab_size = len(chars)
 
     def encode(self, s):
         """
-        把字符串转换成 token id 列表
-        例如：'你好' -> [12, 35]
+        文本 -> token id
+        如果遇到训练集中没见过的字符，就转成 UNK_TOKEN
         """
-        return [self.stoi[ch] for ch in s]
+        unk_id = self.stoi[UNK_TOKEN]
+        return [self.stoi.get(ch, unk_id) for ch in s]
 
     def decode(self, ids):
         """
-        把 token id 列表转换回字符串
-        例如：[12, 35] -> '你好'
+        token id -> 文本
         """
-        return ''.join([self.itos[i] for i in ids])
+        return "".join([self.itos[i] for i in ids])
+
+    def save(self, path):
+        """
+        保存词表
+        """
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    "chars": self.chars
+                },
+                f,
+                ensure_ascii=False,
+                indent=2
+            )
+
+    @classmethod
+    def load(cls, path):
+        """
+        加载词表
+        """
+        with open(path, "r", encoding="utf-8") as f:
+            obj = json.load(f)
+
+        return cls(chars=obj["chars"])
 
 
 if __name__ == "__main__":
-    # 读取训练数据
     with open("data/chat.txt", "r", encoding="utf-8") as f:
         text = f.read()
 
-    # 创建 tokenizer
-    tokenizer = CharTokenizer(text)
+    tokenizer = CharTokenizer(text=text)
 
     print("训练数据总字符数:", len(text))
     print("词表大小 vocab_size:", tokenizer.vocab_size)
 
-    # 测试编码和解码
     sample = "<user> 你好"
     ids = tokenizer.encode(sample)
 
     print("原始文本:", sample)
     print("编码结果:", ids)
     print("解码结果:", tokenizer.decode(ids))
+
+    tokenizer.save("vocab.json")
+    print("词表已保存到 vocab.json")

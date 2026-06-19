@@ -7,7 +7,7 @@
 <end>
 
 <user> 你能做什么？
-<assistant> 我可以根据训练数据生成简单的回答，帮助你理解 GPT 的训练过程。
+<assistant> 我可以根据训练数据生成简单回答，帮助你理解 GPT 的训练过程。
 <end>
 
 <user> 什么是大模型？
@@ -15,7 +15,7 @@
 <end>
 
 <user> 什么是 GPT？
-<assistant> GPT 是一种基于 Transformer 的生成式语言模型，核心任务是预测下一个 token。
+<assistant> GPT 是一种基于 Transformer 的生成式语言模型，核心任务是根据前面的 token 预测下一个 token。
 <end>
 
 <user> 什么是 token？
@@ -27,7 +27,7 @@
 <end>
 
 <user> 什么是 self-attention？
-<assistant> self-attention 是让每个 token 关注上下文中其他 token 的机制。
+<assistant> self-attention 是让每个 token 根据上下文关注其他 token 的机制。
 <end>
 
 <user> 什么是 Transformer？
@@ -36,6 +36,102 @@
 
 <user> GPT 是怎么训练的？
 <assistant> GPT 通过阅读大量文本，学习根据前面的 token 预测下一个 token。
+<end>
+
+<user> 什么是 logits？
+<assistant> logits 是模型最后输出的原始分数，还没有经过 softmax 转换成概率。
+<end>
+
+<user> 什么是 softmax？
+<assistant> softmax 可以把一组分数转换成概率分布，所有概率加起来等于 1。
+<end>
+
+<user> 什么是 loss？
+<assistant> loss 表示模型预测结果和正确答案之间的差距，loss 越小代表预测越接近答案。
+<end>
+
+<user> 什么是反向传播？
+<assistant> 反向传播是根据 loss 计算每个参数的梯度，并用梯度更新模型参数的过程。
+<end>
+
+<user> 什么是学习率？
+<assistant> 学习率控制模型参数每次更新的步子大小，太大容易不稳定，太小训练会很慢。
+<end>
+
+<user> 什么是 epoch？
+<assistant> epoch 表示完整训练数据被模型学习了一遍的次数。
+<end>
+
+<user> 什么是 batch size？
+<assistant> batch size 表示模型一次训练时同时处理多少条样本。
+<end>
+
+<user> 什么是过拟合？
+<assistant> 过拟合是模型在训练数据上表现很好，但在新数据上表现不好的现象。
+<end>
+
+<user> 为什么小模型回答不好？
+<assistant> 因为小模型参数少、训练数据少，能学习到的语言模式有限。
+<end>
+
+<user> MiniChatGPT 的目的是什么？
+<assistant> MiniChatGPT 的目的不是做出真正的 ChatGPT，而是帮助我们理解大模型的底层原理。
+<end>
+
+<user> 什么是 PyTorch？
+<assistant> PyTorch 是一个常用的深度学习框架，可以用来构建、训练和部署神经网络模型。
+<end>
+
+<user> 什么是 DataLoader？
+<assistant> DataLoader 是 PyTorch 中用来批量读取训练数据的工具。
+<end>
+
+<user> 什么是 optimizer？
+<assistant> optimizer 是优化器，用来根据梯度更新模型参数，例如 AdamW。
+<end>
+
+<user> 什么是 AdamW？
+<assistant> AdamW 是一种常用优化器，适合训练 Transformer 和大语言模型。
+<end>
+
+<user> 什么是 RAG？
+<assistant> RAG 是检索增强生成，它先从外部知识库检索相关内容，再让大模型基于检索结果生成回答。
+<end>
+
+<user> RAG 为什么能减少幻觉？
+<assistant> 因为 RAG 会先提供可靠的外部资料，让模型基于资料回答，而不是完全依赖模型记忆。
+<end>
+
+<user> 什么是 AI Agent？
+<assistant> AI Agent 是能够理解任务、规划步骤、调用工具并完成目标的智能程序。
+<end>
+
+<user> 什么是 ROS2？
+<assistant> ROS2 是机器人操作系统的第二代版本，常用于机器人通信、控制、导航和感知。
+<end>
+
+<user> 什么是 PID？
+<assistant> PID 是一种经典控制算法，由比例、积分、微分三部分组成。
+<end>
+
+<user> 什么是嵌入式开发？
+<assistant> 嵌入式开发是针对特定硬件设备进行软件开发，例如单片机、车载设备和机器人控制器。
+<end>
+
+<user> 什么是机器人开发？
+<assistant> 机器人开发通常包括感知、控制、导航、通信和任务规划等内容。
+<end>
+
+<user> 什么是 Linux？
+<assistant> Linux 是一种开源操作系统，常用于服务器、嵌入式设备、机器人和 AI 开发环境。
+<end>
+
+<user> 什么是 C++？
+<assistant> C++ 是一种高性能编程语言，常用于系统开发、嵌入式开发、游戏和机器人开发。
+<end>
+
+<user> 什么是 Python？
+<assistant> Python 是一种语法简单、生态丰富的编程语言，常用于人工智能、数据分析和后端开发。
 <end>
 
 <user> 1+1等于几？
@@ -56,57 +152,4 @@
 
 <user> 日本的首都是哪里？
 <assistant> 日本的首都是东京。
-<end>
-
-<user> C++ 是什么？
-<assistant> C++ 是一种高性能编程语言，常用于系统开发、嵌入式、游戏和机器人开发。
-<end>
-
-<user> Python 是什么？
-<assistant> Python 是一种语法简单、生态丰富的编程语言，常用于人工智能、数据分析和后端开发。
-<end>
-
-<user> Linux 是什么？
-<assistant> Linux 是一种开源操作系统，常用于服务器、嵌入式设备和机器人开发。
-<end>
-
-<user> 什么是 ROS2？
-<assistant> ROS2 是机器人操作系统的第二代版本，常用于机器人通信、控制和导航。
-<end>
-
-<user> 什么是 PID？
-<assistant> PID 是一种经典控制算法，由比例、积分、微分三部分组成。
-<end>
-
-<user> 什么是嵌入式开发？
-<assistant> 嵌入式开发是针对特定硬件设备进行软件开发，例如单片机、车载设备和机器人控制器。
-<end>
-
-<user> 什么是机器人开发？
-<assistant> 机器人开发通常包括感知、控制、导航、通信和任务规划等内容。
-<end>
-
-<user> 什么是 AI Agent？
-<assistant> AI Agent 是能够理解任务、调用工具并完成目标的智能程序。
-<end>
-
-<user> 学习大模型需要什么基础？
-<assistant> 学习大模型需要 Python、PyTorch、线性代数、神经网络、Transformer 和训练流程等基础。
-<end>
-
-<user> 训练模型需要什么？
-<assistant> 训练模型需要数据、模型结构、损失函数、优化器和计算资源。
-<end>
-
-<user> 为什么小模型回答不好？
-<assistant> 因为小模型参数少、数据少，能记住和理解的模式有限。
-<end>
-
-<user> MiniChatGPT 的目的是什么？
-<assistant> MiniChatGPT 的目的不是做出真正的 ChatGPT，而是帮助我们理解大模型的底层原理。
-<end>
-
-
-<user> 韩国的首都是哪里？
-<assistant> 韩国的首都是首尔。
 <end>

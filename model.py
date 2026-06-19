@@ -7,6 +7,9 @@ from torch.nn import functional as F
 from config import block_size, n_embd, n_head, n_layer, dropout, device
 
 
+
+
+
 class Head(nn.Module):
     """
     一个 Attention Head

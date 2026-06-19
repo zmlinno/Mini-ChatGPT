@@ -27,6 +27,10 @@ n_head = 4 #attention head 数量
 n_layer = 4 #Transformer 层数
 dropout = 0.1 #dropout 概率
 
+#checkpoint配置
+save_interval = 600
+resume_from_checkpoint = False
+checkpoint_path = "checkpoints/latest.pth"
 
 #自动选择设备
 if torch.cuda.is_available():
